@@ -1,0 +1,30 @@
+
+
+	#----------------------------------------------------#
+	#-------         --------     --------        -------#
+	#------- CST (Code Signing Tool) Version 2.0  -------#
+	#-------         --------     --------        -------#
+	#----------------------------------------------------#
+?? getopt returned character code 00 ??
+
+==========================================================
+This tool includes software developed by OpenSSL Project
+for use in the OpenSSL Toolkit (http://www.openssl.org/)
+This product includes cryptographic software written by
+Eric Young (eay@cryptsoft.com)
+==========================================================
+
+Input File is input_files/uni_sign/lx2160/input_bootscript_secure
+
+
+SRK (Public Key) Hash:
+9db2169937c26b9951ed5488ba97cdfa9709cf43e2b100b2a91bf8e613bf768e
+	 SFP SRKHR0 = 9db21699
+	 SFP SRKHR1 = 37c26b99
+	 SFP SRKHR2 = 51ed5488
+	 SFP SRKHR3 = ba97cdfa
+	 SFP SRKHR4 = 9709cf43
+	 SFP SRKHR5 = e2b100b2
+	 SFP SRKHR6 = a91bf8e6
+	 SFP SRKHR7 = 13bf768e
+
