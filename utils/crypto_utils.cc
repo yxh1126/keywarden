@@ -44,8 +44,8 @@ bool CryptoUtils::RsaSignVerify(uint8_t* img_hash, uint32_t len,
                                 uint8_t* rsa_sign, uint32_t rsa_len,
                                 char* pub_key_name) {
   int ret;
-  FILE *fpubkey;
-  RSA *pub_key;
+  FILE* fpubkey;
+  RSA* pub_key;
 
   /* Open the private Key */
   fpubkey = fopen(pub_key_name, "r");
@@ -78,8 +78,8 @@ bool CryptoUtils::DumpRsaPubKey(const char* key_name, char* pub_key_pem,
   EVP_PKEY* priv_key;
   BIO *rsa_pem_bio, *pem_buff, *der_buff;
   int ret;
-  char *pub_pem_buf;
-  uint8_t *pub_der_buf;
+  char* pub_pem_buf;
+  uint8_t* pub_der_buf;
   int64_t buf_len;
 
   if (pub_key_pem == NULL || pub_key_der == NULL || pubkey_der_hash == NULL) {
