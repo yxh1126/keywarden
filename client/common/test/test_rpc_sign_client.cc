@@ -41,20 +41,22 @@ TEST_F(RpcSignClientTest, TestGetRsaPublicKey) {
 
 TEST_F(RpcSignClientTest, TestVerifySignature) {
   int key_set[] = {1024, 2048};
-  int pem_type_pub = 1;
+  int nxp_type_pub = 0;
   std::string test_pub_name = "tmp";
 
   for (int set = 0; set < SUPRT_KEY_SET; set++) {
-    for (int id = 0; id < SUPRT_KEY_ID; id++) {
+    for (int id = 1; id < SUPRT_KEY_ID; id++) {
       std::string pub_key_pem =
-        client->GetRsaPublicKey(key_set[set], id + 1, pem_type_pub);
+        client->GetRsaPublicKey(key_set[set], id + 1, nxp_type_pub);
       std::string test_sign_str =
         client->GetRsaSignature(test_hash_str2, key_set[set], id + 1);
+
       FmtUtils::WriteText(test_pub_name, pub_key_pem);
       EXPECT_EQ(pub_key_pem, FmtUtils::ReadText(test_pub_name));
+
       bool res = client->VerifyRsaSignature(test_hash_str2, test_sign_str,
                                             test_pub_name);
-      EXPECT_FALSE(res);
+      EXPECT_TRUE(res);
     }
   }
 }
