@@ -9,4 +9,4 @@ bazel-keywarden
 __pycache__
 *.pyi
 *.pem
-*.der
+*.ders
