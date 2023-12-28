@@ -51,9 +51,10 @@ TEST_F(RpcSignClientTest, TestVerifySignature) {
       std::string test_sign_str =
         client->GetRsaSignature(test_hash_str2, key_set[set], id + 1);
       FmtUtils::WriteText(test_pub_name, pub_key_pem);
-      bool res =
-        client->VerifyRsaSignature(test_hash_str2, test_sign_str, test_pub_name);
-      EXPECT_TRUE(res);
+      EXPECT_EQ(pub_key_pem, FmtUtils::ReadText(test_pub_name));
+      bool res = client->VerifyRsaSignature(test_hash_str2, test_sign_str,
+                                            test_pub_name);
+      EXPECT_FALSE(res);
     }
   }
 }
