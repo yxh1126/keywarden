@@ -88,10 +88,14 @@ bool CodeSigningClient::VerifyRsaSignature(const std::string& hash_str,
   uint8_t hash_data[SHA256_DIGEST_LENGTH];
   uint8_t sign_data[KEY_SIZE_BYTES];
 
-  hash_len = FmtUtils::HexStringToBytes(hash_str, hash_data, SHA256_DIGEST_LENGTH);
-  rsa_sign_len = FmtUtils::HexStringToBytes(sign_str, sign_data, KEY_SIZE_BYTES);
+  hash_len =
+      FmtUtils::HexStringToBytes(hash_str, hash_data, SHA256_DIGEST_LENGTH);
+  rsa_sign_len =
+      FmtUtils::HexStringToBytes(sign_str, sign_data, KEY_SIZE_BYTES);
 
-  return CryptoUtils::RsaSignVerify(hash_data, hash_len, sign_data, rsa_sign_len, pub_key_name.c_str());
+  return CryptoUtils::RsaSignVerify(hash_data, hash_len,
+                                    sign_data, rsa_sign_len,
+                                    pub_key_name.c_str());
 }
 
 void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,

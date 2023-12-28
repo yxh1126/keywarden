@@ -40,6 +40,7 @@ class CodeSigningClient {
                               const std::string& fname);
   static bool PubRequestCheck(const int key_set, const int key_id,
                               const int key_type, const char fmt);
+
  private:
   static constexpr const char* kClassName = "CodeSigningClient";
 
