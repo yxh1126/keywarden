@@ -40,6 +40,39 @@ bool CryptoUtils::RsaSignHash(uint8_t* img_hash, uint32_t len,
   return true;
 }
 
+bool CryptoUtils::RsaSignVerify(uint8_t* img_hash, uint32_t len,
+                                uint8_t* rsa_sign, uint32_t rsa_len,
+                                char* pub_key_name) {
+  int ret;
+  FILE *fpubkey;
+  RSA *pub_key;
+
+  /* Open the private Key */
+  fpubkey = fopen(pub_key_name, "r");
+  if (fpubkey == NULL) {
+    printf("Error in file opening %s:\n", pub_key_name);
+    return false;
+  }
+
+  pub_key = PEM_read_RSAPublicKey(fpubkey, NULL, NULL, NULL);
+  fclose(fpubkey);
+  if (pub_key == NULL) {
+    printf("Error in public key reading %s:\n", pub_key_name);
+    return false;
+  }
+
+  /* Sign the Image Hash with Private Key */
+  ret = RSA_verify(NID_sha256, img_hash, len, rsa_sign, rsa_len, pub_key);
+  RSA_free(pub_key);
+
+  if (ret != 1) {
+    printf("Error in Verify Signature\n");
+    return false;
+  }
+
+  return true;
+}
+
 bool CryptoUtils::DumpRsaPubKey(const char* key_name, char* pub_key_pem,
                                 char* pub_key_der, uint8_t* pubkey_der_hash) {
   EVP_PKEY* priv_key;
