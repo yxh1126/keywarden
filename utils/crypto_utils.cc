@@ -42,7 +42,7 @@ bool CryptoUtils::RsaSignHash(uint8_t* img_hash, uint32_t len,
 
 bool CryptoUtils::RsaSignVerify(uint8_t* img_hash, uint32_t len,
                                 uint8_t* rsa_sign, uint32_t rsa_len,
-                                char* pub_key_name) {
+                                const char* pub_key_name) {
   int ret;
   FILE* fpubkey;
   RSA* pub_key;

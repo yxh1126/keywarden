@@ -25,6 +25,9 @@ class CodeSigningClient {
                               const int key_id);
   std::string GetRsaPublicKey(const int key_set, const int key_id,
                               const int key_type);
+  bool VerifyRsaSignature(const std::string& hash_str,
+                          const std::string& sign_str,
+                          const std::string& pub_key_name);
   void FmtRsaSignature(const std::string& hash_str, const int key_set,
                        const int key_id, const char fmt = FMT_RSA_SIGN_STR,
                        const std::string& fname = "",
