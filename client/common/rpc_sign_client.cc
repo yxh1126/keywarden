@@ -83,7 +83,8 @@ CodeSigningClient::GetRsaPublicKey(const int key_set, const int key_id,
 
 bool CodeSigningClient::VerifyRsaSignature(const std::string& hash_str,
                                            const std::string& sign_str,
-                                           const std::string& pub_key_name) {
+                                           const std::string& pub_key_name,
+                                           const int fmt) {
   int hash_len, rsa_sign_len;
   uint8_t hash_data[SHA256_DIGEST_LENGTH];
   uint8_t sign_data[KEY_SIZE_BYTES];
@@ -95,7 +96,7 @@ bool CodeSigningClient::VerifyRsaSignature(const std::string& hash_str,
 
   return CryptoUtils::RsaSignVerify(hash_data, hash_len,
                                     sign_data, rsa_sign_len,
-                                    pub_key_name.c_str());
+                                    pub_key_name.c_str(), fmt);
 }
 
 void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,

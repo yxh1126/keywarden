@@ -55,7 +55,7 @@ TEST_F(RpcSignClientTest, TestVerifySignature) {
 
       EXPECT_EQ(pub_key_pem, FmtUtils::ReadText(test_pub_name));
       EXPECT_TRUE(client->VerifyRsaSignature(test_hash_str, test_sign_str,
-                                             test_pub_name));
+                                             test_pub_name, nxp_type_pub));
     }
   }
 }

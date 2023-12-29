@@ -16,7 +16,7 @@ class CryptoUtils {
                           uint32_t* rsa_len, void* pri_key_ptr);
   static bool RsaSignVerify(uint8_t* img_hash, uint32_t len, uint8_t* rsa_sign,
                             uint32_t rsa_len, const char* pub_key_name,
-                            int fmt = 0);
+                            const int fmt = 0);
   static bool DumpRsaPubKey(const char* key_name, char* pub_key_pem,
                             char* pub_key_der, uint8_t* pubkey_der_hash);
   static bool ExtractRsaPriKey(const char* key_name, void** pri_key_ptr);
