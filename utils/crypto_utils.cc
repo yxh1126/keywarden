@@ -42,7 +42,7 @@ bool CryptoUtils::RsaSignHash(uint8_t* img_hash, uint32_t len,
 
 bool CryptoUtils::RsaSignVerify(uint8_t* img_hash, uint32_t len,
                                 uint8_t* rsa_sign, uint32_t rsa_len,
-                                const char* pub_key_name) {
+                                const char* pub_key_name, int fmt) {
   int ret;
   FILE* fpubkey;
   RSA* pub_key;
@@ -54,7 +54,17 @@ bool CryptoUtils::RsaSignVerify(uint8_t* img_hash, uint32_t len,
     return false;
   }
 
-  pub_key = PEM_read_RSAPublicKey(fpubkey, NULL, NULL, NULL);
+  if (fmt == 0) {
+    /* Reads the PKCS#1 format public key - e.g. NXP LX2160 */
+    pub_key = PEM_read_RSAPublicKey(fpubkey, NULL, NULL, NULL);
+  } else if (fmt == 1) {
+    /* Reads the PEM format - e.g. Horizon J5 */
+    pub_key = PEM_read_RSA_PUBKEY(fpubkey, NULL, NULL, NULL);
+  } else {
+    /* Do nothing and intended to let pub_key as NULL */
+    pub_key = NULL;
+  }
+
   fclose(fpubkey);
   if (pub_key == NULL) {
     printf("Error in public key reading %s:\n", pub_key_name);

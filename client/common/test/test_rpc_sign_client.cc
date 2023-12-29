@@ -18,14 +18,15 @@ class RpcSignClientTest : public ::testing::Test {
     nxp_type_pub = 0;
     test_hash_str =
       "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
-    channel = grpc::CreateChannel("localhost:50051",
-                                  grpc::InsecureChannelCredentials());
+    host_ip = "localhost:50051";
+    channel = grpc::CreateChannel(host_ip, grpc::InsecureChannelCredentials());
     client = std::make_unique<CodeSigningClient>(channel);
   }
 
  protected:
   int nxp_type_pub;
   std::string test_hash_str;
+  std::string host_ip;
   std::shared_ptr<Channel> channel;
   std::unique_ptr<CodeSigningClient> client;
 };
