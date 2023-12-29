@@ -15,22 +15,18 @@ namespace test {
 class RpcSignClientTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    nxp_type_pub = 0;
-    pem_type_pub = 1;
-    test_hash_str =
-      "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
     host_ip = "localhost:50051";
     channel = grpc::CreateChannel(host_ip, grpc::InsecureChannelCredentials());
     client = std::make_unique<CodeSigningClient>(channel);
+    test_hash_str =
+      "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
   }
 
  protected:
-  int nxp_type_pub;
-  int pem_type_pub;
-  std::string test_hash_str;
   std::string host_ip;
   std::shared_ptr<Channel> channel;
   std::unique_ptr<CodeSigningClient> client;
+  std::string test_hash_str;
 };
 
 TEST_F(RpcSignClientTest, TestGetRsaSignature) {
@@ -38,12 +34,12 @@ TEST_F(RpcSignClientTest, TestGetRsaSignature) {
 }
 
 TEST_F(RpcSignClientTest, TestGetRsaPublicKey) {
-  EXPECT_EQ(client->GetRsaPublicKey(2048, 0, nxp_type_pub), RPC_FAILURE_MSG);
+  EXPECT_EQ(client->GetRsaPublicKey(2048, 0, JOB_LX2160_PUB), RPC_FAILURE_MSG);
 }
 
 TEST_F(RpcSignClientTest, TestVerifySignature) {
   int key_set[] = {1024, 2048};
-  int pub_type[] = {nxp_type_pub, pem_type_pub};
+  int pub_type[] = {JOB_LX2160_PUB, JOB_J5_PUB_PEM};
   std::string test_pub_name = "tmpkey";
 
   for (int type = 0; type < SUPRT_PUB_TYPE; type++) {
