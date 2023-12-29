@@ -254,7 +254,8 @@ DataUtils::ServerRsaSignHash(const char* hash_str, const int key_set,
   }
 
   /* Print out sign info */
-  printf("[%lu] ", sign_req_cnt_++);
+  sign_req_cnt_++;
+  printf("[%lu] ", sign_req_cnt_);
   printf("hash:%s hash_len:%ld", hash_str, strlen(hash_str) / 2);
   printf(" sig_len:%d key_id:%d key_set:%d\n", sig_len, key_id, key_set);
 

@@ -14,6 +14,7 @@ cc_library(
     ],
     deps = [
         "//protos:sign_server_cc_grpc",
+        "//utils:crypto_utils",
         "//utils:fmt_utils",
         "//utils:common",
     ],
