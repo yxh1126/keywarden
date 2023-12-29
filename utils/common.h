@@ -24,6 +24,7 @@
 #define KEY_SIZE_BYTES 1024
 #define SUPRT_KEY_ID   8
 #define SUPRT_KEY_SET  2
+#define SUPRT_PUB_TYPE 2
 
 #define JOB_LX2160_PUB 0
 #define JOB_J5_PUB_PEM 1

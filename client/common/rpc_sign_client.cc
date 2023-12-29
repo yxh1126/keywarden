@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <iostream>
 
+#include "utils/crypto_utils.h"
 #include "utils/fmt_utils.h"
 
 using grpc::ClientContext;
@@ -15,6 +16,7 @@ using signserver::RsaSignRequest;
 using signserver::RsaSignReply;
 using signserver::RsaPubkeyRequest;
 using signserver::RsaPubkeyReply;
+using utils::CryptoUtils;
 using utils::FmtUtils;
 using client::common::CodeSigningClient;
 
@@ -77,6 +79,24 @@ CodeSigningClient::GetRsaPublicKey(const int key_set, const int key_id,
               << std::endl;
     return RPC_FAILURE_MSG;
   }
+}
+
+bool CodeSigningClient::VerifyRsaSignature(const std::string& hash_str,
+                                           const std::string& sign_str,
+                                           const std::string& pub_key_name,
+                                           const int fmt) {
+  int hash_len, rsa_sign_len;
+  uint8_t hash_data[SHA256_DIGEST_LENGTH];
+  uint8_t sign_data[KEY_SIZE_BYTES];
+
+  hash_len =
+      FmtUtils::HexStringToBytes(hash_str, hash_data, SHA256_DIGEST_LENGTH);
+  rsa_sign_len =
+      FmtUtils::HexStringToBytes(sign_str, sign_data, KEY_SIZE_BYTES);
+
+  return CryptoUtils::RsaSignVerify(hash_data, hash_len,
+                                    sign_data, rsa_sign_len,
+                                    pub_key_name.c_str(), fmt);
 }
 
 void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,

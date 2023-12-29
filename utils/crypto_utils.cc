@@ -40,13 +40,56 @@ bool CryptoUtils::RsaSignHash(uint8_t* img_hash, uint32_t len,
   return true;
 }
 
+bool CryptoUtils::RsaSignVerify(uint8_t* img_hash, uint32_t len,
+                                uint8_t* rsa_sign, uint32_t rsa_len,
+                                const char* pub_key_name, const int fmt) {
+  int ret;
+  FILE* fpubkey;
+  RSA* pub_key;
+
+  /* Open the private Key */
+  fpubkey = fopen(pub_key_name, "r");
+  if (fpubkey == NULL) {
+    printf("Error in file opening %s:\n", pub_key_name);
+    return false;
+  }
+
+  if (fmt == 0) {
+    /* Reads the PKCS#1 format public key - e.g. NXP LX2160 */
+    pub_key = PEM_read_RSAPublicKey(fpubkey, NULL, NULL, NULL);
+  } else if (fmt == 1) {
+    /* Reads the PEM format - e.g. Horizon J5 */
+    pub_key = PEM_read_RSA_PUBKEY(fpubkey, NULL, NULL, NULL);
+  } else {
+    /* Do nothing and intended to let pub_key as NULL */
+    pub_key = NULL;
+  }
+
+  fclose(fpubkey);
+  if (pub_key == NULL) {
+    printf("Error in public key reading %s:\n", pub_key_name);
+    return false;
+  }
+
+  /* Sign the Image Hash with Private Key */
+  ret = RSA_verify(NID_sha256, img_hash, len, rsa_sign, rsa_len, pub_key);
+  RSA_free(pub_key);
+
+  if (ret != 1) {
+    printf("Error in Verify Signature\n");
+    return false;
+  }
+
+  return true;
+}
+
 bool CryptoUtils::DumpRsaPubKey(const char* key_name, char* pub_key_pem,
                                 char* pub_key_der, uint8_t* pubkey_der_hash) {
   EVP_PKEY* priv_key;
   BIO *rsa_pem_bio, *pem_buff, *der_buff;
   int ret;
-  char *pub_pem_buf;
-  uint8_t *pub_der_buf;
+  char* pub_pem_buf;
+  uint8_t* pub_der_buf;
   int64_t buf_len;
 
   if (pub_key_pem == NULL || pub_key_der == NULL || pubkey_der_hash == NULL) {
