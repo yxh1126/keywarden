@@ -63,8 +63,8 @@ typedef struct {
 } PubBigNum;
 
 typedef struct {
-  int length;
-  char content[KEY_SIZE_BYTES];
+  unsigned int length;
+  unsigned char content[KEY_SIZE_BYTES];
 } PubKeyTable;
 
 #endif  // UTILS_COMMON_H_

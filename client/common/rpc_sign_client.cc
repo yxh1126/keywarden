@@ -138,7 +138,7 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
 void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
                                         const int key_type, const char fmt,
                                         const std::string& tofile) {
-  std::string fpt;
+  std::string pub_key_fpt;
   std::string public_key = GetRsaPublicKey(key_set, key_id, key_type);
 
   if (public_key == RPC_FAILURE_MSG)
@@ -166,11 +166,11 @@ void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
       break;
 
     case FMT_RSA_PUB_FPT:
-      fpt = CryptoUtils::GetRsaPubKeyHash(public_key, key_set);
+      pub_key_fpt = CryptoUtils::GetRsaPubKeyHash(public_key, key_set);
       if (!tofile.empty())
-        FmtUtils::WriteText(tofile, fpt);
+        FmtUtils::WriteText(tofile, pub_key_fpt);
       else
-        FmtUtils::FmtOutAsString(fpt);
+        FmtUtils::FmtOutAsString(pub_key_fpt);
       break;
 
     default:
