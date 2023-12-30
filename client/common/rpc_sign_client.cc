@@ -138,6 +138,7 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
 void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
                                         const int key_type, const char fmt,
                                         const std::string& tofile) {
+  std::string fpt;
   std::string public_key = GetRsaPublicKey(key_set, key_id, key_type);
 
   if (public_key == RPC_FAILURE_MSG)
@@ -162,6 +163,14 @@ void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
       FmtUtils::FmtOutAsPubBigNum(public_key, key_set);
       if (!tofile.empty())
         std::cout << "Not support file saving for this fmt ..." << std::endl;
+      break;
+
+    case FMT_RSA_PUB_FPT:
+      fpt = CryptoUtils::GetRsaPubKeyHash(public_key, key_set);
+      if (!tofile.empty())
+        FmtUtils::WriteText(tofile, fpt);
+      else
+        FmtUtils::FmtOutAsString(fpt);
       break;
 
     default:
@@ -229,6 +238,7 @@ bool CodeSigningClient::PubRequestCheck(const int key_set, const int key_id,
       break;
 
     case FMT_RSA_PUB_NUM:
+    case FMT_RSA_PUB_FPT:
       if (key_type != JOB_J5_PUB_DER)
         return false;
       break;

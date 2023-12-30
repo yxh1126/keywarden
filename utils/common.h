@@ -44,6 +44,7 @@
 #define FMT_RSA_PUB_STR 's'
 #define FMT_RSA_PUB_BYT 'b'
 #define FMT_RSA_PUB_NUM 'n'
+#define FMT_RSA_PUB_FPT 'h'
 
 typedef struct {
   void* pri_key;
@@ -60,5 +61,10 @@ typedef struct {
   char n[KEY_SIZE_BYTES];
   char e[KEY_SIZE_BYTES];
 } PubBigNum;
+
+typedef struct {
+  int length;
+  char content[KEY_SIZE_BYTES];
+} PubKeyTable;
 
 #endif  // UTILS_COMMON_H_

@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     ("type,t", po::value<std::string>(),
      "Public key type: [pem, der, sign, nxp, aurix]")
     ("fmt,f", po::value<char>()->default_value(FMT_RSA_PUB_STR),
-     "Format for display the public key: [s - text, b - binary, n - modulous]")
+     "Format for display the public key: [s - str, b - bin, n - mod, h - hash]")
     ("tofile,w", po::value<std::string>()->default_value(""),
      "Path for saving the public key");
 

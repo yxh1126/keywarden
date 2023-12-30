@@ -26,6 +26,8 @@ class CryptoUtils {
   static void GetSha256Hash(const void* data, uint32_t len, uint8_t* hash);
   static void GetSha256Hash(const std::string& data, uint8_t* hash);
   static std::string GetFileSha256Hash(const std::string& fpath);
+  static std::string GetRsaPubKeyHash(const std::string& public_key,
+                                      const int key_set);
 
   // AES algorithm support
   static uint8_t* Aes256Encrypt(const uint8_t* data_in, const int data_len,
