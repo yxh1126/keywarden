@@ -223,6 +223,28 @@ std::string CryptoUtils::GetFileSha256Hash(const std::string& fpath) {
   return FmtUtils::BytesToHexString(hash_out, SHA256_DIGEST_LENGTH);
 }
 
+std::string CryptoUtils::GetRsaPubKeyHash(const std::string& public_key,
+                                          const int key_set) {
+  int n_size, e_size;
+  uint8_t n_data[KEY_SIZE_BYTES];
+  uint8_t e_data[KEY_SIZE_BYTES];
+  uint8_t hash_out[SHA256_DIGEST_LENGTH];
+
+  PubKeyTable pub_key_tb;
+  std::memset(&pub_key_tb, 0, sizeof(PubKeyTable));
+
+  PubBigNum pbn = FmtUtils::PemPubToBigNum(public_key, key_set);
+  pub_key_tb.length = strlen(pbn.n);
+
+  n_size = FmtUtils::HexStringToBytes(pbn.n, n_data, KEY_SIZE_BYTES);
+  e_size = FmtUtils::HexStringToBytes(pbn.e, e_data, KEY_SIZE_BYTES);
+  std::memcpy(pub_key_tb.content, n_data, n_size);
+  std::memcpy(pub_key_tb.content + 2 * n_size - e_size, e_data, e_size);
+
+  GetSha256Hash(&pub_key_tb, sizeof(PubKeyTable), hash_out);
+  return FmtUtils::BytesToHexString(hash_out, SHA256_DIGEST_LENGTH);
+}
+
 uint8_t* CryptoUtils::Aes256Encrypt(const uint8_t* data_in, const int data_len,
                                     const uint8_t *aes_key, int* data_out_len) {
   AES_KEY enc_key;
