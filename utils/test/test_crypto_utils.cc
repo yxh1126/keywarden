@@ -53,5 +53,18 @@ TEST_F(CryptoUtilsTest, TestGetSha256Hash) {
   EXPECT_EQ(digest, hash_str);
 }
 
+TEST_F(CryptoUtilsTest, TestGetRsaPubKeyHash) {
+  std::string pem_pub =
+    "30819f300d06092a864886f70d010101050003818d0030818902818100bf0c7c7632c1d53"
+    "a46d08dcf6f3cbe85efdc9abd7813c8cc407f844fa114bbca28cb51c55d9679ab6fbf8a69"
+    "f5eee5c78b67c8ae059ebbb4193db6fa11b4dbc8d8d5975f28cac83af289e03eeac667dc6"
+    "ae64421cc7343108aa189573826fc64f0095423eb3c9ffa400be4559e0d37d0d2ab475eb8"
+    "c9252ddf16f49fd279e79b0203010001";
+  std::string pub_fpt =
+    "9db2169937c26b9951ed5488ba97cdfa9709cf43e2b100b2a91bf8e613bf768e";
+
+  EXPECT_EQ(CryptoUtils::GetRsaPubKeyHash(pem_pub, RSA_1024_KEY_SET), pub_fpt);
+}
+
 }  // namespace test
 }  // namespace utils
