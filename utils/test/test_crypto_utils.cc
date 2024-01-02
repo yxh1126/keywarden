@@ -78,6 +78,7 @@ TEST_F(CryptoUtilsTest, TestGetRsaPubKeyHash) {
   pub_fpt = "4a2cdacc6b297e38a5955c902c922f8d5eab8e2b9d91e66574c2cb32eb8ecfab";
 
   EXPECT_EQ(CryptoUtils::GetRsaPubKeyHash(pem_pub, RSA_2048_KEY_SET), pub_fpt);
+  EXPECT_EQ(CryptoUtils::GetRsaPubKeyHash(pem_pub, 123), "");
 }
 
 }  // namespace test
