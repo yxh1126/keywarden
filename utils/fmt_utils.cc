@@ -137,6 +137,22 @@ std::string FmtUtils::ReadText(const std::string& fpath) {
   return str;
 }
 
+bool FmtUtils::ReadText(const std::string& fpath, std::vector<std::string>* t) {
+  std::string line;
+  std::ifstream infile(fpath);
+
+  if (!infile.is_open() || t == NULL)
+    return false;
+
+  t->clear();
+  while (getline(infile, line)) {
+    t->push_back(line);
+  }
+
+  infile.close();
+  return true;
+}
+
 bool FmtUtils::ReadBytes(const std::string& fpath, uint8_t* data_buf,
                          const size_t buf_len) {
   FILE* fp;
