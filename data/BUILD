@@ -4,4 +4,5 @@ exports_files([
     "hexdata.bin",
     "hexdata.txt",
     "textfile.txt",
+    "hashlist.txt",
 ])

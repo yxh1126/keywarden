@@ -133,6 +133,7 @@ std::string FmtUtils::ReadText(const std::string& fpath) {
   std::ifstream t(fpath.c_str());
   std::string str((std::istreambuf_iterator<char>(t)),
                    std::istreambuf_iterator<char>());
+  t.close();
   return str;
 }
 

@@ -75,7 +75,7 @@ TEST_F(RpcSignClientTest, TestVerifyPubkeyHash) {
       if (pub_key_der == RPC_FAILURE_MSG) break;
 
       pub_key_fpt = CryptoUtils::GetRsaPubKeyHash(pub_key_der, key_set[set]);
-      EXPECT_EQ(pub_key_fpt, "");
+      EXPECT_NE(pub_key_fpt, "");
     }
   }
 }
