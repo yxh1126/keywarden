@@ -235,6 +235,8 @@ std::string CryptoUtils::GetRsaPubKeyHash(const std::string& public_key,
 
   PubBigNum pbn = FmtUtils::PemPubToBigNum(public_key, key_set);
   pub_key_tb.length = strlen(pbn.n);
+  if (pub_key_tb.length == 0)
+    return "";
 
   n_size = FmtUtils::HexStringToBytes(pbn.n, n_data, KEY_SIZE_BYTES);
   e_size = FmtUtils::HexStringToBytes(pbn.e, e_data, KEY_SIZE_BYTES);

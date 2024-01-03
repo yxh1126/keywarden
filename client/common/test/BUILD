@@ -9,6 +9,9 @@ cc_test(
     srcs = [
         "test_rpc_sign_client.cc"
     ],
+    data = [
+        "//data:hashlist.txt",
+    ],
     deps = [
         "//:gtest",
         "//client/common:rpc_sign_client",

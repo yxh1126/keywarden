@@ -5,8 +5,10 @@
 #include "gtest/gtest.h"
 #include "client/common/rpc_sign_client.h"
 #include "utils/fmt_utils.h"
+#include "utils/crypto_utils.h"
 
 using utils::FmtUtils;
+using utils::CryptoUtils;
 
 namespace client {
 namespace common {
@@ -38,7 +40,7 @@ TEST_F(RpcSignClientTest, TestGetRsaPublicKey) {
 }
 
 TEST_F(RpcSignClientTest, TestVerifySignature) {
-  int key_set[] = {1024, 2048};
+  int key_set[] = {RSA_1024_KEY_SET, RSA_2048_KEY_SET};
   int pub_type[] = {JOB_LX2160_PUB, JOB_J5_PUB_PEM};
   std::string test_pub_name = "tmpkey";
 
@@ -57,6 +59,29 @@ TEST_F(RpcSignClientTest, TestVerifySignature) {
         EXPECT_TRUE(client->VerifyRsaSignature(test_hash_str, test_sign_str,
                                                test_pub_name, pub_type[type]));
       }
+    }
+  }
+}
+
+TEST_F(RpcSignClientTest, TestVerifyPubkeyHash) {
+  int key_set[] = {RSA_1024_KEY_SET, RSA_2048_KEY_SET};
+  int pub_type = JOB_J5_PUB_DER;
+  std::string pub_key_fpt;
+  std::vector<std::string> hash_list;
+  int idx = 0;
+
+  EXPECT_TRUE(FmtUtils::ReadText("data/hashlist.txt", &hash_list));
+  EXPECT_EQ(hash_list.size(), 14);
+
+  for (int set = 0; set < SUPRT_KEY_SET; set++) {
+    for (int id = 1; id < SUPRT_KEY_ID; id++) {
+      std::string pub_key_der =
+        client->GetRsaPublicKey(key_set[set], id + 1, pub_type);
+      if (pub_key_der == RPC_FAILURE_MSG) break;
+
+      pub_key_fpt = CryptoUtils::GetRsaPubKeyHash(pub_key_der, key_set[set]);
+      EXPECT_EQ(pub_key_fpt, hash_list[idx]);
+      idx++;
     }
   }
 }
