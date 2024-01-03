@@ -130,10 +130,27 @@ void FmtUtils::FmtOutAsPubBigNum(const std::string& public_key,
 }
 
 std::string FmtUtils::ReadText(const std::string& fpath) {
-  std::ifstream t(fpath.c_str());
-  std::string str((std::istreambuf_iterator<char>(t)),
-                   std::istreambuf_iterator<char>());
-  return str;
+  std::ifstream infile(fpath.c_str());
+  std::string rdtxt((std::istreambuf_iterator<char>(infile)),
+                     std::istreambuf_iterator<char>());
+  infile.close();
+  return rdtxt;
+}
+
+bool FmtUtils::ReadText(const std::string& fpath,
+                        std::vector<std::string>* tlist) {
+  std::string line;
+  std::ifstream infile(fpath);
+
+  if (!infile.is_open() || tlist == NULL)
+    return false;
+
+  tlist->clear();
+  while (getline(infile, line))
+    tlist->push_back(line);
+
+  infile.close();
+  return true;
 }
 
 bool FmtUtils::ReadBytes(const std::string& fpath, uint8_t* data_buf,
