@@ -1,1 +1,2 @@
 build --nocache_test_results
+build --stamp --workspace_status_command=$(pwd)/version/git_stamp_info.sh
