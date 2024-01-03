@@ -12,6 +12,7 @@ cc_binary(
     deps = [
         "//client/common:rpc_sign_client",
         "//utils:common",
+        "//version:tool_version",
         "//:boost",
     ],
 )
@@ -26,6 +27,7 @@ cc_binary(
         "//utils:fmt_utils",
         "//utils:crypto_utils",
         "//utils:common",
+        "//version:tool_version",
         "//:boost",
     ],
 )

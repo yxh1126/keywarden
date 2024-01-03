@@ -9,6 +9,7 @@
 #include "utils/fmt_utils.h"
 #include "utils/crypto_utils.h"
 #include "utils/common.h"
+#include "version/tool_version.h"
 #include "client/common/rpc_sign_client.h"
 #include "boost/program_options.hpp"
 
@@ -23,8 +24,8 @@ int main(int argc, char** argv) {
   po::options_description desc("Command line parameters");
   desc.add_options()
     ("help,h", "Print the help message")
-    ("addr,a",
-     po::value<std::string>()->default_value(SERVER_URL),
+    ("version,v", "Print the tool version number")
+    ("addr,a", po::value<std::string>()->default_value(SERVER_URL),
      "Server IP address for the code signing service")
     ("port,p", po::value<uint16_t>()->default_value(SERVER_PORT),
      "Server port for the code signing service")
@@ -55,6 +56,11 @@ int main(int argc, char** argv) {
 
   if (vm.count("help")) {
     std::cout << kToolName << std::endl << desc;
+    return 0;
+  }
+
+  if (vm.count("version")) {
+    std::cout << kToolName << std::endl << KEYWARDEN_VERSION_NUM << std::endl;
     return 0;
   }
 
