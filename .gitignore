@@ -10,3 +10,7 @@ __pycache__
 *.pyi
 *.pem
 *.der
+artifacts/
+coverage/
+public/
+summary/
