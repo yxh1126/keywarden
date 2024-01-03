@@ -29,6 +29,7 @@ cc_binary(
     deps = [
         "//server:rpc_sign_server",
         "//utils:common",
+        "//version:tool_version",
         "//:boost",
         "//:glog",
     ],
