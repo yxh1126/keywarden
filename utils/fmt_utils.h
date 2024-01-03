@@ -37,7 +37,6 @@ class FmtUtils {
   // File read operation
   static std::string ReadText(const std::string& fpath);
   static bool ReadText(const std::string& fpath, std::vector<std::string>* t);
-
   static bool ReadBytes(const std::string& fpath, uint8_t* data_buf,
                         const size_t buf_len);
   static std::string ReadSha256Hash(const std::string& fpath);
