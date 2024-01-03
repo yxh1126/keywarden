@@ -1,5 +1,5 @@
 //
-// Copyright 2023 Yi Huang. All Rights Reserved.
+// Copyright 2023 Inceptio Technology. All Rights Reserved.
 //
 
 #ifndef CLIENT_COMMON_RPC_SIGN_CLIENT_H_

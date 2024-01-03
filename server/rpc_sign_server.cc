@@ -1,5 +1,5 @@
 //
-// Copyright 2023 Yi Huang. All Rights Reserved.
+// Copyright 2023 Inceptio Technology. All Rights Reserved.
 //
 
 #include "server/rpc_sign_server.h"
