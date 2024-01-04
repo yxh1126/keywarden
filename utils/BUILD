@@ -59,4 +59,7 @@ cc_library(
     hdrs = [
         "common.h",
     ],
+    deps = [
+        "//:glog",
+    ],
 )

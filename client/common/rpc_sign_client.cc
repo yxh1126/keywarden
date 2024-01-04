@@ -127,7 +127,7 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
     case FMT_RSA_SIGN_SSL:
       FmtUtils::FmtOutAsSslSign(signature, fname);
       if (!tofile.empty())
-        std::cout << "Not support file saving for this fmt ..." << std::endl;
+        LOG(INFO) << "xNot support file saving for this fmt ...";
       break;
 
     default:
@@ -162,7 +162,7 @@ void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
     case FMT_RSA_PUB_NUM:
       FmtUtils::FmtOutAsPubBigNum(public_key, key_set);
       if (!tofile.empty())
-        std::cout << "Not support file saving for this fmt ..." << std::endl;
+        LOG(INFO) << "Not support file saving for this fmt ...";
       break;
 
     case FMT_RSA_PUB_FPT:
@@ -205,7 +205,7 @@ bool CodeSigningClient::SigRequestCheck(const std::string& hash_str,
 
     case FMT_RSA_SIGN_SSL:
       if (fname.empty()) {
-        std::cout << "The name of the original file is required." << std::endl;
+        LOG(INFO) << "The name of the original file is required ...";
         return false;
       }
       break;
