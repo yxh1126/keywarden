@@ -72,7 +72,6 @@ int main(int argc, char** argv) {
   } catch(...) {
     LOG(ERROR) << kToolName;
     LOG(ERROR) << "Input parameter is invalid ...";
-    LOG(ERROR) << desc;
     return 1;
   }
   po::notify(vm);
@@ -97,7 +96,6 @@ int main(int argc, char** argv) {
   if (stat(the_keydb.c_str(), &sb) == -1) {
     LOG(ERROR) << kToolName;
     LOG(ERROR) << "The key database: <" << the_keydb << "> is invalid ...";
-    LOG(ERROR) << desc;
     return 1;
   }
 

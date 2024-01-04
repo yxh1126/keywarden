@@ -41,8 +41,8 @@ int main(int argc, char** argv) {
   try {
     po::store(po::parse_command_line(argc, argv, desc), vm);
   } catch(...) {
-    std::cout << "Parameter type is not valid ...\n" << std::endl;
-    std::cout << kToolName << std::endl << desc;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "Parameter type is not valid ...";
     return 1;
   }
   po::notify(vm);
@@ -50,23 +50,18 @@ int main(int argc, char** argv) {
   if (vm.count("help")) {
     LOG(INFO) << kToolName;
     LOG(INFO) << desc;
-    // std::cout << kToolName << std::endl << desc;
     return 0;
   }
 
   if (vm.count("version")) {
     LOG(INFO) << kToolName;
     LOG(INFO) << KEYWARDEN_VERSION_NUM;
-    // std::cout << kToolName << std::endl << KEYWARDEN_VERSION_NUM << std::endl;
     return 0;
   }
 
   if (!vm.count("length") || !vm.count("id") || !vm.count("type")) {
     LOG(ERROR) << kToolName;
     LOG(ERROR) << "Required parameter is missing ...";
-    LOG(ERROR) << desc;
-    // std::cout << "Required parameter is missing ...\n" << std::endl;
-    // std::cout << kToolName << std::endl << desc;
     return 1;
   }
 
@@ -93,14 +88,14 @@ int main(int argc, char** argv) {
     key_type = JOB_J5_PUB_DER;
     out_fmt = FMT_RSA_PUB_NUM;
   } else {
-    std::cout << "Key type parameter is not valid ...\n" << std::endl;
-    std::cout << kToolName << std::endl << desc;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "Key type parameter is not valid ...";
     return 1;
   }
 
   if (!CodeSigningClient::PubRequestCheck(key_set, key_id, key_type, out_fmt)) {
-    std::cout << "Parameter error or format not support ...\n" << std::endl;
-    std::cout << kToolName << std::endl << desc;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "Parameter error or format not support ...";
     return 1;
   }
 

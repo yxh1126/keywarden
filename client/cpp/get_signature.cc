@@ -51,19 +51,21 @@ int main(int argc, char** argv) {
   try {
     po::store(po::parse_command_line(argc, argv, desc), vm);
   } catch(...) {
-    std::cout << "Parameter type is not valid ...\n" << std::endl;
-    std::cout << kToolName << std::endl << desc;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "Parameter type is not valid ...";
     return 1;
   }
   po::notify(vm);
 
   if (vm.count("help")) {
-    std::cout << kToolName << std::endl << desc;
+    LOG(INFO) << kToolName;
+    LOG(INFO) << desc;
     return 0;
   }
 
   if (vm.count("version")) {
-    std::cout << kToolName << std::endl << KEYWARDEN_VERSION_NUM << std::endl;
+    LOG(INFO) << kToolName;
+    LOG(INFO) << KEYWARDEN_VERSION_NUM;
     return 0;
   }
 
@@ -73,8 +75,8 @@ int main(int argc, char** argv) {
   if (vm.count("hash_str")) in_arg_cnt++;
 
   if (!vm.count("length") || !vm.count("id") || in_arg_cnt != 1) {
-    std::cout << "Required parameter does not match ...\n" << std::endl;
-    std::cout << kToolName << std::endl << desc;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "Required parameter does not match ...";
     return 1;
   }
 
@@ -102,8 +104,8 @@ int main(int argc, char** argv) {
 
   if (!CodeSigningClient::SigRequestCheck(hash_str, key_set, key_id,
                                           out_fmt, tag_name)) {
-    std::cout << "Parameter error or format not support ...\n" << std::endl;
-    std::cout << kToolName << std::endl << desc;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "Parameter error or format not support ...";
     return 1;
   }
 
