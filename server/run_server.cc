@@ -13,7 +13,6 @@
 #include "boost/program_options.hpp"
 #include "grpcpp/ext/proto_server_reflection_plugin.h"
 #include "grpcpp/health_check_service_interface.h"
-#include "glog/logging.h"
 
 const constexpr char *kToolName = "[gRPC Code Signing Server Launcher]";
 
@@ -22,13 +21,14 @@ using grpc::Server;
 using grpc::ServerBuilder;
 using server::CodeSigningService;
 
-void RunServer(const uint16_t port, const std::string& addr,
-               const std::string& key_db) {
+int RunServer(const uint16_t port, const std::string& addr,
+              const std::string& key_db) {
   std::string server_info = addr + ":" + std::to_string(port);
   CodeSigningService service(key_db);
   if (!service.GetServerStatus()) {
-    std::cout << "T_T Orz, failed to launching server ..." << std::endl;
-    return;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "T_T Orz, failed to launching server ...";
+    return 1;
   }
 
   grpc::EnableDefaultHealthCheckService(true);
@@ -41,11 +41,14 @@ void RunServer(const uint16_t port, const std::string& addr,
   builder.RegisterService(&service);
   // Finally assemble the server.
   std::unique_ptr<Server> server(builder.BuildAndStart());
-  std::cout << "Server is listening on " << server_info << std::endl;
+
+  LOG(INFO) << kToolName;
+  LOG(INFO) << "Server is listening on " << server_info;
 
   // Wait for the server to shutdown. Note that some other thread must be
   // responsible for shutting down the server for this call to ever return.
   server->Wait();
+  return 0;
 }
 
 int main(int argc, char** argv) {
@@ -67,19 +70,21 @@ int main(int argc, char** argv) {
   try {
     po::store(po::parse_command_line(argc, argv, desc), vm);
   } catch(...) {
-    std::cout << "Input parameter is invalid ...\n" << std::endl;
-    std::cout << kToolName << std::endl << desc;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "Input parameter is invalid ...";
     return 1;
   }
   po::notify(vm);
 
   if (vm.count("help")) {
-    std::cout << kToolName << std::endl << desc;
+    LOG(INFO) << kToolName;
+    LOG(INFO) << desc;
     return 0;
   }
 
   if (vm.count("version")) {
-    std::cout << kToolName << std::endl << KEYWARDEN_VERSION_NUM << std::endl;
+    LOG(INFO) << kToolName;
+    LOG(INFO) << KEYWARDEN_VERSION_NUM;
     return 0;
   }
 
@@ -89,12 +94,10 @@ int main(int argc, char** argv) {
 
   struct stat sb;
   if (stat(the_keydb.c_str(), &sb) == -1) {
-    std::cout << "The path of the database: <" << the_keydb <<
-                 "> is invalid ...\n" << std::endl;
-    std::cout << kToolName << std::endl << desc;
+    LOG(ERROR) << kToolName;
+    LOG(ERROR) << "The key database: <" << the_keydb << "> is invalid ...";
     return 1;
   }
 
-  RunServer(the_port, the_addr, the_keydb);
-  return 0;
+  return RunServer(the_port, the_addr, the_keydb);
 }

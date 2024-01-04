@@ -5,6 +5,9 @@
 #ifndef UTILS_COMMON_H_
 #define UTILS_COMMON_H_
 
+#include <cstdint>
+#include "glog/logging.h"
+
 #define SERVER_URL  "localhost"
 #define SERVER_ADDR "0.0.0.0"
 #define SERVER_PORT 50051
@@ -63,8 +66,8 @@ typedef struct {
 } PubBigNum;
 
 typedef struct {
-  unsigned int length;
-  unsigned char content[KEY_SIZE_BYTES];
+  uint32_t length;
+  uint8_t content[KEY_SIZE_BYTES];
 } PubKeyTable;
 
 #endif  // UTILS_COMMON_H_

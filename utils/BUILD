@@ -37,7 +37,6 @@ cc_library(
         "//utils:common",
         "//utils:crypto_utils",
         "//utils:fmt_utils",
-        "//:glog",
     ],
 )
 
@@ -58,5 +57,8 @@ cc_library(
     name = "common",
     hdrs = [
         "common.h",
+    ],
+    deps = [
+        "//:glog",
     ],
 )
