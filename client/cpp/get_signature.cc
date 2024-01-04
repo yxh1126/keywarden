@@ -12,7 +12,6 @@
 #include "version/tool_version.h"
 #include "client/common/rpc_sign_client.h"
 #include "boost/program_options.hpp"
-#include "glog/logging.h"
 
 const constexpr char *kToolName = "[gRPC Code Signing Client - GetSignature]";
 
@@ -22,6 +21,9 @@ using utils::FmtUtils;
 using utils::CryptoUtils;
 
 int main(int argc, char** argv) {
+  FLAGS_logtostderr = 1;
+  google::InitGoogleLogging(argv[0]);
+
   po::options_description desc("Command line parameters");
   desc.add_options()
     ("help,h", "Print the help message")

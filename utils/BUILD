@@ -37,7 +37,6 @@ cc_library(
         "//utils:common",
         "//utils:crypto_utils",
         "//utils:fmt_utils",
-        "//:glog",
     ],
 )
 

@@ -11,7 +11,6 @@
 #include "utils/crypto_utils.h"
 #include "utils/fmt_utils.h"
 #include "json-c/json.h"
-#include "glog/logging.h"
 
 using utils::DataUtils;
 using utils::CryptoUtils;

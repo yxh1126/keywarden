@@ -6,7 +6,6 @@
 #define UTILS_COMMON_H_
 
 #include <cstdint>
-
 #include "glog/logging.h"
 
 #define SERVER_URL  "localhost"

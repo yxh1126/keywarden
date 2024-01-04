@@ -13,7 +13,6 @@
 #include "boost/program_options.hpp"
 #include "grpcpp/ext/proto_server_reflection_plugin.h"
 #include "grpcpp/health_check_service_interface.h"
-#include "glog/logging.h"
 
 const constexpr char *kToolName = "[gRPC Code Signing Server Launcher]";
 

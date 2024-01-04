@@ -10,7 +10,6 @@
 #include "version/tool_version.h"
 #include "client/common/rpc_sign_client.h"
 #include "boost/program_options.hpp"
-#include "glog/logging.h"
 
 const constexpr char *kToolName = "[gRPC Code Signing Client - GetPublicKey]";
 

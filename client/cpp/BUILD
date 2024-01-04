@@ -14,7 +14,6 @@ cc_binary(
         "//utils:common",
         "//version:tool_version",
         "//:boost",
-        "//:glog",
     ],
 )
 
@@ -30,6 +29,5 @@ cc_binary(
         "//utils:common",
         "//version:tool_version",
         "//:boost",
-        "//:glog",
     ],
 )
