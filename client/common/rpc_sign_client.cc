@@ -127,7 +127,7 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
     case FMT_RSA_SIGN_SSL:
       FmtUtils::FmtOutAsSslSign(signature, fname);
       if (!tofile.empty())
-        LOG(WARNING) << kClassName << MSG << "File saving is not support here";
+        LOG(WARNING) << kClassName << MSG << "No file saving for this format";
       break;
 
     default:
@@ -162,7 +162,7 @@ void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
     case FMT_RSA_PUB_NUM:
       FmtUtils::FmtOutAsPubBigNum(public_key, key_set);
       if (!tofile.empty())
-        LOG(WARNING) << kClassName << MSG << "File saving is not support here";
+        LOG(WARNING) << kClassName << MSG << "No file saving for this format";
       break;
 
     case FMT_RSA_PUB_FPT:

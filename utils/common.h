@@ -12,7 +12,7 @@
 #define SERVER_ADDR "0.0.0.0"
 #define SERVER_PORT 50051
 
-#define MSG ": "
+#define MSG " $ "
 #define RPC_FAILURE_MSG "FAILURE"
 
 #define LEN_1024_KEY_SET 0
