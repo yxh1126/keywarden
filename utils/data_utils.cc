@@ -253,10 +253,8 @@ DataUtils::ServerRsaSignHash(const char* hash_str, const int key_set,
   }
 
   /* Print out sign info */
-  sign_req_cnt_++;
-  printf("[%lu] ", sign_req_cnt_);
-  printf("hash:%s hash_len:%ld", hash_str, strlen(hash_str) / 2);
-  printf(" sig_len:%d key_id:%d key_set:%d\n", sig_len, key_id, key_set);
+  LOG(INFO) << JOB_TYPE_SIG << ++sign_req_cnt_ << MSG << "key:" << key_id
+            << " len:" << key_set << " hash:0x" << hash_str;
 
   /* Convert the int in the signature buffer to hex string */
   sign_res = FmtUtils::BytesToHexString(rsa_sign, sig_len);
@@ -273,6 +271,7 @@ DataUtils::ServerRsaGetPubkey(const int key_set, const int key_id,
                               const int job_type) {
   int key_set_id;
   char* pubkey_hex_str;
+  const char* job_type_str;
 
   /* Construct the public key path with the given key ID */
   if (key_set == RSA_1024_KEY_SET) {
@@ -292,18 +291,22 @@ DataUtils::ServerRsaGetPubkey(const int key_set, const int key_id,
   switch (job_type) {
     case JOB_LX2160_PUB:
       pubkey_hex_str = (key_pair_[key_set_id][key_id - 1]).pub_key;
+      job_type_str = NXP_PUB_TYPE;
       break;
 
     case JOB_J5_PUB_PEM:
       pubkey_hex_str = (pubkey_pack_[key_set_id][key_id - 1]).pub_key_pem;
+      job_type_str = PUB_PEM_TYPE;
       break;
 
     case JOB_J5_PUB_DER:
       pubkey_hex_str = (pubkey_pack_[key_set_id][key_id - 1]).pub_key_der;
+      job_type_str = PUB_DER_TYPE;
       break;
 
     case JOB_J5_PUB_SIG:
       pubkey_hex_str = (pubkey_pack_[key_set_id][key_id - 1]).pub_key_der_sign;
+      job_type_str = PUB_SIG_TYPE;
       break;
 
     default:
@@ -316,8 +319,8 @@ DataUtils::ServerRsaGetPubkey(const int key_set, const int key_id,
     return kFailureMsg;
   }
 
-  pubkey_req_cnt_++;
-  LOG(INFO) << kClassName << ": " << pubkey_req_cnt_;
+  LOG(INFO) << JOB_TYPE_PUB << ++pubkey_req_cnt_ << MSG << "key:" << key_id
+            << " len:" << key_set << " type:" << job_type_str;
 
   return std::string(pubkey_hex_str);
 }
