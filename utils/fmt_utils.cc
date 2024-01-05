@@ -176,7 +176,7 @@ bool FmtUtils::ReadBytes(const std::string& fpath, uint8_t* data_buf,
 std::string FmtUtils::ReadSha256Hash(const std::string& fpath) {
   uint8_t hash_data[SHA256_DIGEST_LENGTH];
   if (!ReadBytes(fpath, hash_data, SHA256_DIGEST_LENGTH)) {
-    LOG(ERROR) << kClassName << MSG << "Failed to read data from " << fpath;
+    LOG(ERROR) << kClassName << MSG << "Failed to read data from: " << fpath;
     return "";
   }
   return BytesToHexString(hash_data, SHA256_DIGEST_LENGTH);
@@ -188,7 +188,7 @@ void FmtUtils::WriteText(const std::string& fpath,
 
   fp = fopen(fpath.c_str(), kFileModeWt);
   fputs(data_str.c_str(), fp);
-  LOG(INFO) << kClassName << MSG << "Text has been written to " << fpath;
+  LOG(INFO) << kClassName << MSG << "Text has been written to: " << fpath;
   fclose(fp);
 }
 
@@ -201,6 +201,6 @@ void FmtUtils::WriteBytes(const std::string& fpath,
   buf_size = HexStringToBytes(data_str, data_buf, KEY_SIZE_BYTES);
   fp = fopen(fpath.c_str(), kFileModeWb);
   fwrite(data_buf, sizeof(uint8_t), buf_size, fp);
-  LOG(INFO) << kClassName << MSG << "Bytes has been written to " << fpath;
+  LOG(INFO) << kClassName << MSG << "Bytes has been written to: " << fpath;
   fclose(fp);
 }

@@ -82,7 +82,7 @@ bool DataUtils::ServerDataInit(const char* db_path) {
   free(server_db);
 
   if (!CheckDataValidity()) {
-    LOG(ERROR) << kClassName << MSG << "Unprintable character in server db";
+    LOG(ERROR) << kClassName << MSG << "Bad character in server database";
     return false;
   }
 
