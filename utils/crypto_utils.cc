@@ -25,7 +25,7 @@ bool CryptoUtils::RsaSignHash(uint8_t* img_hash, uint32_t len,
   RSA* priv_key;
 
   if (pri_key_ptr == NULL) {
-    printf("Error in private key buffer\n");
+    LOG(ERROR) << kClassName << MSG << "Error in accessing the private key";
     return false;
   }
   priv_key = reinterpret_cast<RSA*>(pri_key_ptr);
@@ -34,7 +34,7 @@ bool CryptoUtils::RsaSignHash(uint8_t* img_hash, uint32_t len,
   ret = RSA_sign(NID_sha256, img_hash, len, rsa_sign, rsa_len, priv_key);
 
   if (ret != 1) {
-    printf("Error in Signing\n");
+    LOG(ERROR) << kClassName << MSG << "Error in signing the hash value";
     return false;
   }
   return true;
@@ -50,7 +50,7 @@ bool CryptoUtils::RsaSignVerify(uint8_t* img_hash, uint32_t len,
   /* Open the private Key */
   fpubkey = fopen(pub_key_name, "r");
   if (fpubkey == NULL) {
-    printf("Error in file opening %s:\n", pub_key_name);
+    LOG(ERROR) << kClassName << MSG << "Error in open pubkey: " << pub_key_name;
     return false;
   }
 
@@ -67,16 +67,16 @@ bool CryptoUtils::RsaSignVerify(uint8_t* img_hash, uint32_t len,
 
   fclose(fpubkey);
   if (pub_key == NULL) {
-    printf("Error in public key reading %s:\n", pub_key_name);
+    LOG(ERROR) << kClassName << MSG << "Error in read pubkey: " << pub_key_name;
     return false;
   }
 
-  /* Sign the Image Hash with Private Key */
+  /* Verify the Signature with Public Key and Hash */
   ret = RSA_verify(NID_sha256, img_hash, len, rsa_sign, rsa_len, pub_key);
   RSA_free(pub_key);
 
   if (ret != 1) {
-    printf("Error in Verify Signature\n");
+    LOG(ERROR) << kClassName << MSG << "Error in signature verification";
     return false;
   }
 
@@ -93,34 +93,34 @@ bool CryptoUtils::DumpRsaPubKey(const char* key_name, char* pub_key_pem,
   int64_t buf_len;
 
   if (pub_key_pem == NULL || pub_key_der == NULL || pubkey_der_hash == NULL) {
-    printf("Public key buffer empty error\n");
+    LOG(ERROR) << kClassName << MSG << "Public key buffer empty error";
     return false;
   }
 
   rsa_pem_bio = BIO_new_file(key_name, "r");
   priv_key = PEM_read_bio_PrivateKey(rsa_pem_bio, NULL, NULL, NULL);
   if (priv_key == NULL) {
-    printf("Failed to read private key from key pair\n");
+    LOG(ERROR) << kClassName << MSG << "Failed to loading the private key";
     return false;
   }
 
   pem_buff = BIO_new(BIO_s_mem());
   ret = PEM_write_bio_PUBKEY(pem_buff, priv_key);
   if (ret != 1) {
-    printf("Error writing public key data in PEM format\n");
+    LOG(ERROR) << kClassName << MSG << "Failed to write PEM public key";
     return false;
   }
 
   der_buff = BIO_new(BIO_s_mem());
   ret = i2d_PUBKEY_bio(der_buff, priv_key);
   if (ret != 1) {
-    printf("Error writing public key data in DER format\n");
+    LOG(ERROR) << kClassName << MSG << "Failed to write DER public key";
     return false;
   }
 
   buf_len = BIO_get_mem_data(pem_buff, &pub_pem_buf);
   if (buf_len <= 0) {
-    printf("Error dumping PEM format data\n");
+    LOG(ERROR) << kClassName << MSG << "Failed to dumping PEM public key";
     return false;
   }
 
@@ -129,14 +129,14 @@ bool CryptoUtils::DumpRsaPubKey(const char* key_name, char* pub_key_pem,
 
   buf_len = BIO_get_mem_data(der_buff, &pub_der_buf);
   if (buf_len <= 0) {
-    printf("Error dumping DER format data\n");
+    LOG(ERROR) << kClassName << MSG << "Failed to dumping DER public key";
     return false;
   }
 
   /* Copy and convert buffer data as output */
   if (!FmtUtils::BytesToHexString(pub_der_buf, buf_len, pub_key_der,
                                   KEY_SIZE_BYTES)) {
-    printf("Error in data conversion for DER format data\n");
+    LOG(ERROR) << kClassName << MSG << "Error in DER pubkey data conversion";
     return false;
   }
 
@@ -158,14 +158,14 @@ bool CryptoUtils::ExtractRsaPriKey(const char* key_name, void** pri_key_ptr) {
   /* Open the private Key */
   fpriv = fopen(key_name, "r");
   if (fpriv == NULL) {
-    printf("Error in file opening %s:\n", key_name);
+    LOG(ERROR) << kClassName << MSG << "Error in opening file: " << key_name;
     return false;
   }
 
   priv_key = PEM_read_RSAPrivateKey(fpriv, NULL, NULL, NULL);
   fclose(fpriv);
   if (priv_key == NULL) {
-    printf("Error in key reading %s:\n", key_name);
+    LOG(ERROR) << kClassName << MSG << "Error in reading file: " << key_name;
     return false;
   }
   *pri_key_ptr = reinterpret_cast<void*>(priv_key);
@@ -215,7 +215,7 @@ std::string CryptoUtils::GetFileSha256Hash(const std::string& fpath) {
   uint8_t hash_out[SHA256_DIGEST_LENGTH];
   std::string rdtxt = FmtUtils::ReadText(fpath);
   if (rdtxt.empty()) {
-    printf("Failed to read data from file ...\n");
+    LOG(ERROR) << kClassName << MSG << "Empty file or read failure: " << fpath;
     return "";
   }
 
@@ -291,7 +291,7 @@ uint8_t* CryptoUtils::Aes256Decrypt(const char* fname_db, int* data_out_len) {
 
   fp = fopen(fname_db, "rb");
   if (fp == NULL) {
-    fprintf(stderr, "Error in file opening: %s\n", fname_db);
+    LOG(ERROR) << kClassName << MSG << "Error in opening file: " << fname_db;
     return NULL;
   }
 
@@ -306,14 +306,14 @@ uint8_t* CryptoUtils::Aes256Decrypt(const char* fname_db, int* data_out_len) {
 
   fp = fopen(fname_db, "rb");
   if (fp == NULL) {
-    fprintf(stderr, "Error in file opening %s:\n", fname_db);
+    LOG(ERROR) << kClassName << MSG << "Error in opening file: " << fname_db;
     return NULL;
   }
 
   ret = fread(data_in, sizeof(uint8_t), byte_cnt, fp);
   fclose(fp);
   if (ret == 0) {
-    fprintf(stderr, "Error in Reading from file %s\n", fname_db);
+    LOG(ERROR) << kClassName << MSG << "Error in reading file: " << fname_db;
     return NULL;
   }
 
