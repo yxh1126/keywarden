@@ -29,7 +29,7 @@ bool DataUtils::ServerDataInit(const char* db_path) {
   json_object *server_db_jobj, *key_pair;
 
   if (is_server_init_) {
-    printf("Server data already initialized\n");
+    LOG(ERROR) << kClassName << MSG << "Server data already initialized";
     return false;
   }
 
@@ -41,7 +41,7 @@ bool DataUtils::ServerDataInit(const char* db_path) {
   /* Parse the decrypted json string to a parser */
   server_db_jobj = json_tokener_parse(reinterpret_cast<char*>(server_db));
   if (server_db_jobj == NULL) {
-    printf("Failed to parse data in server db\n");
+    LOG(ERROR) << kClassName << MSG << "Failed to parse server database";
     return false;
   }
 
@@ -49,7 +49,7 @@ bool DataUtils::ServerDataInit(const char* db_path) {
   json_object_object_foreach(server_db_jobj, key, val) {
     cnt++;
     if (cnt > 2) {
-      printf("Sever db contains error sets of data\n");
+      LOG(ERROR) << kClassName << MSG << "Sever db contains error sets of data";
       return false;
     }
 
@@ -58,7 +58,7 @@ bool DataUtils::ServerDataInit(const char* db_path) {
     } else if (strcmp(key, "l2048") == 0) {
       key_set_id = LEN_2048_KEY_SET;
     } else {
-      printf("Sever db contains error data in the JSON key\n");
+      LOG(ERROR) << kClassName << MSG << "Bad entry data in server db JSON key";
       return false;
     }
 
@@ -72,7 +72,7 @@ bool DataUtils::ServerDataInit(const char* db_path) {
       ret = FillKeyBuffer(pri_str, pub_str, key_set_id, idx);
       json_object_put(key_pair);
       if (!ret) {
-        printf("Sever db data fill to key buffer failed\n");
+        LOG(ERROR) << kClassName << MSG << "Failed to fill data to key buffer";
         return false;
       }
     }
@@ -82,7 +82,7 @@ bool DataUtils::ServerDataInit(const char* db_path) {
   free(server_db);
 
   if (!CheckDataValidity()) {
-    printf("Sever data contains unprintable character\n");
+    LOG(ERROR) << kClassName << MSG << "Unprintable character in server db";
     return false;
   }
 
@@ -133,14 +133,14 @@ bool DataUtils::FillKeyBuffer(const char* pri_key_str, const char* pub_key_str,
 
   ftmpkey = fopen(tmp_key_file, "w");
   if (ftmpkey == NULL) {
-    printf("Error in opening the file: %s\n", tmp_key_file);
+    LOG(ERROR) << kClassName << MSG << "Error in file open: " << tmp_key_file;
     return false;
   }
 
   ret = fputs(pri_key_str, ftmpkey);
   fclose(ftmpkey);
   if (ret < 0) {
-    printf("Error in Writing to file\n");
+    LOG(ERROR) << kClassName << MSG << "Error in file write: " << tmp_key_file;
     return false;
   }
 
@@ -165,14 +165,14 @@ bool DataUtils::FillKeyBuffer(const char* pri_key_str, const char* pub_key_str,
   if (!CryptoUtils::RsaSignHash(pubkey_der_hash, SHA256_DIGEST_LENGTH,
                                 pubkey_der_sig, &pubkey_der_sig_len,
                                 pri_key_ptr)) {
-    printf("Error in Signing\n");
+    LOG(ERROR) << kClassName << MSG << "Error in signing DER public key";
     return false;
   }
 
   /* Fill buffer for the signed public key */
   if (!FmtUtils::BytesToHexString(pubkey_der_sig, pubkey_der_sig_len,
                                   pubkey_der_sig_j5, KEY_SIZE_BYTES)) {
-    printf("Error in data conversion for DER format data\n");
+    LOG(ERROR) << kClassName << MSG << "Error in signed pubkey data conversion";
     return false;
   }
 
@@ -212,23 +212,23 @@ DataUtils::ServerRsaSignHash(const char* hash_str, const int key_set,
   } else if (key_set == RSA_2048_KEY_SET) {
     key_set_id = LEN_2048_KEY_SET;
   } else {
-    printf("Error in Key Set Number\n");
+    LOG(ERROR) << kClassName << MSG << "Error in key set number from input";
     return kFailureMsg;
   }
 
   if (key_id < 1 || key_id > 8) {
-    printf("Error in Key ID Number from Client\n");
+    LOG(ERROR) << kClassName << MSG << "Error in key ID number from input";
     return kFailureMsg;
   }
 
   if (strlen(hash_str) != SHA256_DIGEST_LENGTH * 2) {
-    printf("Error in Hash Message Size\n");
+    LOG(ERROR) << kClassName << MSG << "Error in hash string length from input";
     return kFailureMsg;
   }
 
   sign_pri_key_ptr = (key_pair_[key_set_id][key_id - 1]).pri_key;
   if (sign_pri_key_ptr == NULL) {
-    printf("Error in Access the Sign Key at Server\n");
+    LOG(ERROR) << kClassName << MSG << "Error in access private key at server";
     return kFailureMsg;
   }
 
@@ -236,19 +236,19 @@ DataUtils::ServerRsaSignHash(const char* hash_str, const int key_set,
   img_hash_size = FmtUtils::HexStringToBytes(hash_str, img_hash,
       SHA256_DIGEST_LENGTH);
   if (img_hash_size != SHA256_DIGEST_LENGTH) {
-    printf("Error in Hash Data Conversion\n");
+    LOG(ERROR) << kClassName << MSG << "Error in hash data conversion";
     return kFailureMsg;
   }
 
   /* Call the CST sign API to get signature */
   if (!CryptoUtils::RsaSignHash(img_hash, SHA256_DIGEST_LENGTH, rsa_sign,
                                 &sig_len, sign_pri_key_ptr)) {
-    printf("Error in Signing\n");
+    LOG(ERROR) << kClassName << MSG << "Error in sign the hash data at server";
     return kFailureMsg;
   }
 
   if (sig_len * 2 >= KEY_SIZE_BYTES) {
-    printf("Error in Signature Buffer Size\n");
+    LOG(ERROR) << kClassName << MSG << "Error in signature buffer size";
     return kFailureMsg;
   }
 
@@ -261,7 +261,7 @@ DataUtils::ServerRsaSignHash(const char* hash_str, const int key_set,
   /* Convert the int in the signature buffer to hex string */
   sign_res = FmtUtils::BytesToHexString(rsa_sign, sig_len);
   if (sign_res.empty()) {
-    printf("Error in data conversion for Signature result\n");
+    LOG(ERROR) << kClassName << MSG << "Error in signature data conversion";
     return kFailureMsg;
   }
 
@@ -280,12 +280,12 @@ DataUtils::ServerRsaGetPubkey(const int key_set, const int key_id,
   } else if (key_set == RSA_2048_KEY_SET) {
     key_set_id = LEN_2048_KEY_SET;
   } else {
-    printf("Error in Key Set Number from Client\n");
+    LOG(ERROR) << kClassName << MSG << "Error in key set number from input";
     return kFailureMsg;
   }
 
   if (key_id < 1 || key_id > 8) {
-    printf("Error in Key ID Number from Client\n");
+    LOG(ERROR) << kClassName << MSG << "Error in key ID number from input";
     return kFailureMsg;
   }
 
@@ -307,12 +307,12 @@ DataUtils::ServerRsaGetPubkey(const int key_set, const int key_id,
       break;
 
     default:
-      printf("Error in Job Type from Client\n");
+      LOG(ERROR) << kClassName << MSG << "Error in job type value from input";
       return kFailureMsg;
   }
 
   if (strlen(pubkey_hex_str) < PUB_KEY_STRLEN_THLD) {
-    printf("Error in getting the Public Key at Server\n");
+    LOG(ERROR) << kClassName << MSG << "Error in access public key at server";
     return kFailureMsg;
   }
 
