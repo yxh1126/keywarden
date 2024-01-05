@@ -46,7 +46,8 @@ CodeSigningClient::GetRsaSignature(const std::string& hash_str,
   if (status.ok()) {
     return reply.signature();
   } else {
-    LOG(ERROR) << status.error_code() << ": " << status.error_message();
+    LOG(ERROR) << kClassName << MSG << "error_code: " << status.error_code();
+    LOG(ERROR) << kClassName << MSG << status.error_message();
     return RPC_FAILURE_MSG;
   }
 }
@@ -74,7 +75,8 @@ CodeSigningClient::GetRsaPublicKey(const int key_set, const int key_id,
   if (status.ok()) {
     return reply.public_key();
   } else {
-    LOG(ERROR) << status.error_code() << ": " << status.error_message();
+    LOG(ERROR) << kClassName << MSG << "error_code: " << status.error_code();
+    LOG(ERROR) << kClassName << MSG << status.error_message();
     return RPC_FAILURE_MSG;
   }
 }
@@ -125,7 +127,7 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
     case FMT_RSA_SIGN_SSL:
       FmtUtils::FmtOutAsSslSign(signature, fname);
       if (!tofile.empty())
-        LOG(WARNING) << "Not support file saving for this format ...";
+        LOG(WARNING) << kClassName << MSG << "No file saving for this format";
       break;
 
     default:
@@ -160,7 +162,7 @@ void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
     case FMT_RSA_PUB_NUM:
       FmtUtils::FmtOutAsPubBigNum(public_key, key_set);
       if (!tofile.empty())
-        LOG(WARNING) << "Not support file saving for this format ...";
+        LOG(WARNING) << kClassName << MSG << "No file saving for this format";
       break;
 
     case FMT_RSA_PUB_FPT:
@@ -203,7 +205,7 @@ bool CodeSigningClient::SigRequestCheck(const std::string& hash_str,
 
     case FMT_RSA_SIGN_SSL:
       if (fname.empty()) {
-        LOG(ERROR) << "The name of the original file is required ...";
+        LOG(ERROR) << kClassName << MSG << "Require the name of original file";
         return false;
       }
       break;
