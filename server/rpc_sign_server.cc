@@ -23,7 +23,8 @@ Status CodeSigningService::GetRsaSignature(ServerContext* context,
   std::string rsa_sig_str =
     key_obj_->ServerRsaSignHash(request->hash_str().c_str(),
                                 request->key_set(),
-                                request->key_id());
+                                request->key_id(),
+                                context->peer().c_str());
   reply->set_signature(rsa_sig_str);
   return Status::OK;
 }
@@ -34,7 +35,8 @@ Status CodeSigningService::GetRsaPublicKey(ServerContext* context,
   std::string rsa_pubkey_str =
     key_obj_->ServerRsaGetPubkey(request->key_set(),
                                  request->key_id(),
-                                 request->key_type());
+                                 request->key_type(),
+                                 context->peer().c_str());
   reply->set_public_key(rsa_pubkey_str);
   return Status::OK;
 }

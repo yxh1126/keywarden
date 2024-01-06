@@ -18,9 +18,9 @@ class DataUtils {
   bool ServerDataInit(const char* db_path);
   bool CheckDataValidity();
   std::string ServerRsaSignHash(const char* hash_str, const int key_set,
-                                const int key_id);
+                                const int key_id, const char* peer);
   std::string ServerRsaGetPubkey(const int key_set, const int key_id,
-                                 const int job_type);
+                                 const int job_type, const char* peer);
 
  private:
   static constexpr const char* kClassName = "DataUtils";

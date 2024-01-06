@@ -197,7 +197,7 @@ void DataUtils::ServerPriKeyClear() {
 
 std::string
 DataUtils::ServerRsaSignHash(const char* hash_str, const int key_set,
-                             const int key_id) {
+                             const int key_id, const char* peer) {
   int img_hash_size, key_set_id;
   uint32_t sig_len;
   void* sign_pri_key_ptr;
@@ -252,9 +252,10 @@ DataUtils::ServerRsaSignHash(const char* hash_str, const int key_set,
     return kFailureMsg;
   }
 
-  /* Print out sign info */
+  /* Print out the server get sign detail info */
   LOG(INFO) << JOB_TYPE_SIG << ++sign_req_cnt_ << MSG << "key:" << key_id
-            << " len:" << key_set << " hash:0x" << hash_str;
+            << " len:" << key_set << " hash:0x" << hash_str
+            << " client:" << peer;
 
   /* Convert the int in the signature buffer to hex string */
   sign_res = FmtUtils::BytesToHexString(rsa_sign, sig_len);
@@ -268,7 +269,7 @@ DataUtils::ServerRsaSignHash(const char* hash_str, const int key_set,
 
 std::string
 DataUtils::ServerRsaGetPubkey(const int key_set, const int key_id,
-                              const int job_type) {
+                              const int job_type, const char* peer) {
   int key_set_id;
   char* pubkey_hex_str;
   const char* job_type_str;
@@ -319,8 +320,10 @@ DataUtils::ServerRsaGetPubkey(const int key_set, const int key_id,
     return kFailureMsg;
   }
 
+  /* Print out the server get pubkey detail info */
   LOG(INFO) << JOB_TYPE_PUB << ++pubkey_req_cnt_ << MSG << "key:" << key_id
-            << " len:" << key_set << " type:" << job_type_str;
+            << " len:" << key_set << " type:" << job_type_str
+            << " client:" << peer;
 
   return std::string(pubkey_hex_str);
 }
