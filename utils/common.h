@@ -13,6 +13,8 @@
 #define SERVER_PORT 50051
 
 #define MSG " $ "
+#define JOB_TYPE_PUB "PUB_"
+#define JOB_TYPE_SIG "SIG_"
 #define RPC_FAILURE_MSG "FAILURE"
 
 #define LEN_1024_KEY_SET 0
