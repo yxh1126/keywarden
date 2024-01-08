@@ -225,10 +225,17 @@ std::string CryptoUtils::GetFileSha256Hash(const std::string& fpath) {
 
 std::string CryptoUtils::GetRsaPubKeyHash(const std::string& public_key,
                                           const int key_set) {
-  int n_size, e_size;
+  int n_size, e_size, der_size;
+  uint8_t der_data[KEY_SIZE_BYTES];
   uint8_t n_data[KEY_SIZE_BYTES];
   uint8_t e_data[KEY_SIZE_BYTES];
   uint8_t hash_out[SHA256_DIGEST_LENGTH];
+
+  if (key_set == -1) {
+    der_size = FmtUtils::HexStringToBytes(public_key, der_data, KEY_SIZE_BYTES);
+    GetSha256Hash(der_data, der_size, hash_out);
+    return FmtUtils::BytesToHexString(hash_out, SHA256_DIGEST_LENGTH);
+  }
 
   PubKeyTable pub_key_tb;
   std::memset(&pub_key_tb, 0, sizeof(PubKeyTable));
