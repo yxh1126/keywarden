@@ -269,7 +269,7 @@ uint8_t* CryptoUtils::Aes256Encrypt(const uint8_t* data_in, const int data_len,
 
   pad_size = AES_BLOCK_SIZE - (data_len % AES_BLOCK_SIZE);
   for (i = 0; i < pad_size; i++) {
-    *(data_in_pad + data_len + i) = ' ';
+    *(data_in_pad + data_len + i) = AES_PADDING_CHAR;
   }
 
   AES_set_encrypt_key(aes_key, 256, &enc_key);
