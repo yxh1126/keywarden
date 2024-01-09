@@ -7,6 +7,8 @@
 #include "utils/fmt_utils.h"
 #include "utils/crypto_utils.h"
 
+#define ENC_KEYDB_SIZE 26576
+
 namespace utils {
 namespace test {
 
@@ -30,22 +32,35 @@ TEST_F(CryptoUtilsTest, TestAes256Decrypt) {
   std::string file_str(reinterpret_cast<char*>(file_data_ptr));
   std::string cmp_str = FmtUtils::ReadText(text_path);
 
-  EXPECT_EQ(data_out_len, 26576);
+  EXPECT_EQ(data_out_len, ENC_KEYDB_SIZE);
   EXPECT_EQ(file_str.substr(0, cmp_str.length()), cmp_str);
 
   free(file_data_ptr);
 }
 
 TEST_F(CryptoUtilsTest, TestAes256Encrypt) {
-  uint8_t* file_data_ptr;
-  file_data_ptr = CryptoUtils::Aes256Decrypt(file_path.c_str(), &data_out_len);
-  std::string file_str(reinterpret_cast<char*>(file_data_ptr));
-  std::string cmp_str = FmtUtils::ReadText(text_path);
+  uint8_t cmp_buf[ENC_KEYDB_SIZE];
+  uint8_t aes_key[] = {
+      0x82, 0xd0, 0x70, 0xe5, 0xca, 0x3b, 0xfb, 0xb1,
+      0xb8, 0x14, 0x95, 0x8f, 0xb8, 0x4b, 0xca, 0x11,
+      0x6f, 0x07, 0xce, 0x55, 0x60, 0x43, 0xb0, 0xdf,
+      0x28, 0x32, 0xf1, 0xe7, 0xfc, 0xe0, 0x31, 0xea};
 
-  EXPECT_EQ(data_out_len, 26576);
-  EXPECT_EQ(file_str.substr(0, cmp_str.length()), cmp_str);
+  std::string data_in = FmtUtils::ReadText(text_path);
+  int data_len = data_in.length();
+  const uint8_t* data_ptr = reinterpret_cast<const uint8_t*>(data_in.c_str());
+  uint8_t* enc_data_ptr =
+    CryptoUtils::Aes256Encrypt(data_ptr, data_len, aes_key, &data_out_len);
 
-  free(file_data_ptr);
+  EXPECT_LT(data_len, data_out_len);
+  EXPECT_EQ(data_out_len, ENC_KEYDB_SIZE);
+  EXPECT_TRUE(FmtUtils::ReadBytes(file_path, cmp_buf, sizeof(cmp_buf)));
+
+  for (int i = 0; i < ENC_KEYDB_SIZE; i++) {
+    EXPECT_EQ(enc_data_ptr[i], cmp_buf[i]);
+  }
+
+  free(enc_data_ptr);
 }
 
 TEST_F(CryptoUtilsTest, TestGetSha256Hash) {
