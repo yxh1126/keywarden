@@ -104,6 +104,7 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
                                         const char fmt,
                                         const std::string& fname,
                                         const std::string& tofile) {
+  std::string fmt_out;
   std::string signature = GetRsaSignature(hash_str, key_set, key_id);
 
   if (signature == RPC_FAILURE_MSG)
@@ -125,9 +126,11 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
       break;
 
     case FMT_RSA_SIGN_SSL:
-      FmtUtils::FmtOutAsSslSign(signature, fname);
+      fmt_out = FmtUtils::FmtOutAsSslSign(signature, fname);
       if (!tofile.empty())
-        LOG(WARNING) << kClassName << MSG << "No file saving for this format";
+        FmtUtils::WriteText(tofile, fmt_out);
+      else
+        FmtUtils::FmtOutAsString(fmt_out);
       break;
 
     default:
@@ -138,8 +141,14 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
 void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
                                         const int key_type, const char fmt,
                                         const std::string& tofile) {
+  std::string fmt_out;
   std::string pub_key_fpt;
-  std::string public_key = GetRsaPublicKey(key_set, key_id, key_type);
+  std::string public_key;
+
+  if (fmt == FMT_RSA_PUB_FPT)
+    public_key = GetRsaPublicKey(key_set, key_id, JOB_J5_PUB_DER);
+  else
+    public_key = GetRsaPublicKey(key_set, key_id, key_type);
 
   if (public_key == RPC_FAILURE_MSG)
     return;
@@ -160,13 +169,19 @@ void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
       break;
 
     case FMT_RSA_PUB_NUM:
-      FmtUtils::FmtOutAsPubBigNum(public_key, key_set);
+      fmt_out = FmtUtils::FmtOutAsPubBigNum(public_key, key_set);
       if (!tofile.empty())
-        LOG(WARNING) << kClassName << MSG << "No file saving for this format";
+        FmtUtils::WriteText(tofile, fmt_out);
+      else
+        FmtUtils::FmtOutAsString(fmt_out);
       break;
 
     case FMT_RSA_PUB_FPT:
-      pub_key_fpt = CryptoUtils::GetRsaPubKeyHash(public_key, key_set);
+      if (key_type == JOB_LX2160_PUB)
+        pub_key_fpt = CryptoUtils::GetRsaPubKeyHash(public_key, key_set);
+      else
+        pub_key_fpt = CryptoUtils::GetRsaPubKeyHash(public_key, -1);
+
       if (!tofile.empty())
         FmtUtils::WriteText(tofile, pub_key_fpt);
       else
@@ -238,8 +253,13 @@ bool CodeSigningClient::PubRequestCheck(const int key_set, const int key_id,
       break;
 
     case FMT_RSA_PUB_NUM:
-    case FMT_RSA_PUB_FPT:
       if (key_type != JOB_J5_PUB_DER)
+        return false;
+      break;
+
+    case FMT_RSA_PUB_FPT:
+      if (key_type != JOB_LX2160_PUB && key_type != JOB_J5_PUB_PEM &&
+          key_type != JOB_J5_PUB_DER)
         return false;
       break;
 

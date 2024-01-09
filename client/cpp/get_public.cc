@@ -84,12 +84,14 @@ int main(int argc, char** argv) {
     key_type = JOB_J5_PUB_DER;
   } else if (the_type == PUB_SIG_TYPE) {
     key_type = JOB_J5_PUB_SIG;
-  } else if (the_type == AURIX_PUB_TYPE) {
+  } else if (the_type == AURIX_PUB_TYPE && (
+             out_fmt == FMT_RSA_PUB_STR ||
+             out_fmt == FMT_RSA_PUB_NUM)) {
     key_type = JOB_J5_PUB_DER;
     out_fmt = FMT_RSA_PUB_NUM;
   } else {
     LOG(ERROR) << kToolName;
-    LOG(ERROR) << "Key type parameter is not valid ...";
+    LOG(ERROR) << "Key type parameter or dispaly format is not valid ...";
     return 1;
   }
 

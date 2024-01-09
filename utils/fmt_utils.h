@@ -29,10 +29,10 @@ class FmtUtils {
   // Standard output
   static void FmtOutAsString(const std::string& data_str);
   static void FmtOutAsBytes(const std::string& data_str);
-  static void FmtOutAsSslSign(const std::string& signature,
-                              const std::string& fname);
-  static void FmtOutAsPubBigNum(const std::string& public_key,
-                                const int key_set);
+  static std::string FmtOutAsSslSign(const std::string& signature,
+                                     const std::string& fname);
+  static std::string FmtOutAsPubBigNum(const std::string& public_key,
+                                       const int key_set);
 
   // File read operation
   static std::string ReadText(const std::string& fpath);

@@ -88,9 +88,9 @@ void FmtUtils::FmtOutAsBytes(const std::string& data_str) {
   }
 }
 
-void FmtUtils::FmtOutAsSslSign(const std::string& signature,
-                               const std::string& fname) {
-  printf("RSA-SHA256(%s)= %s\n", fname.c_str(), signature.c_str());
+std::string FmtUtils::FmtOutAsSslSign(const std::string& signature,
+                                      const std::string& fname) {
+  return "RSA-SHA256(" + fname + ")= " + signature;
 }
 
 PubBigNum FmtUtils::PemPubToBigNum(const std::string& public_key,
@@ -118,15 +118,17 @@ PubBigNum FmtUtils::PemPubToBigNum(const std::string& public_key,
   return pbn;
 }
 
-void FmtUtils::FmtOutAsPubBigNum(const std::string& public_key,
-                                 const int key_set) {
+std::string FmtUtils::FmtOutAsPubBigNum(const std::string& public_key,
+                                        const int key_set) {
   PubBigNum pbn = PemPubToBigNum(public_key, key_set);
   if (pbn.n[0] == '\0') {
     LOG(ERROR) << kClassName << MSG << "RSA public key length is not support";
-    return;
+    return "";
   }
-  printf("n = 0x%s\n", pbn.n);
-  printf("e = 0x%s\n", pbn.e);
+
+  std::string n_str = "n = 0x" + std::string(pbn.n);
+  std::string e_str = "e = 0x" + std::string(pbn.e);
+  return n_str + "\n" + e_str;
 }
 
 std::string FmtUtils::ReadText(const std::string& fpath) {
