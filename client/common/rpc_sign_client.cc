@@ -104,6 +104,7 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
                                         const char fmt,
                                         const std::string& fname,
                                         const std::string& tofile) {
+  std::string fmt_out;
   std::string signature = GetRsaSignature(hash_str, key_set, key_id);
 
   if (signature == RPC_FAILURE_MSG)
@@ -125,9 +126,11 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
       break;
 
     case FMT_RSA_SIGN_SSL:
-      FmtUtils::FmtOutAsSslSign(signature, fname);
+      fmt_out = FmtUtils::FmtOutAsSslSign(signature, fname);
       if (!tofile.empty())
-        LOG(WARNING) << kClassName << MSG << "No file saving for this format";
+        FmtUtils::WriteText(tofile, fmt_out);
+      else
+        FmtUtils::FmtOutAsString(fmt_out);
       break;
 
     default:
@@ -138,6 +141,7 @@ void CodeSigningClient::FmtRsaSignature(const std::string& hash_str,
 void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
                                         const int key_type, const char fmt,
                                         const std::string& tofile) {
+  std::string fmt_out;
   std::string pub_key_fpt;
   std::string public_key;
 
@@ -165,9 +169,11 @@ void CodeSigningClient::FmtRsaPublicKey(const int key_set, const int key_id,
       break;
 
     case FMT_RSA_PUB_NUM:
-      FmtUtils::FmtOutAsPubBigNum(public_key, key_set);
+      fmt_out = FmtUtils::FmtOutAsPubBigNum(public_key, key_set);
       if (!tofile.empty())
-        LOG(WARNING) << kClassName << MSG << "No file saving for this format";
+        FmtUtils::WriteText(tofile, fmt_out);
+      else
+        FmtUtils::FmtOutAsString(fmt_out);
       break;
 
     case FMT_RSA_PUB_FPT:
