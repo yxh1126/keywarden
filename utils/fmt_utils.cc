@@ -75,7 +75,8 @@ std::string FmtUtils::BytesToHexString(const uint8_t* data_buf,
 }
 
 void FmtUtils::FmtOutAsString(const std::string& data_str) {
-  printf("%s\n", data_str.c_str());
+  if (!data_str.empty())
+    printf("%s\n", data_str.c_str());
 }
 
 void FmtUtils::FmtOutAsBytes(const std::string& data_str) {
