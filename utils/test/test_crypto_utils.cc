@@ -36,6 +36,18 @@ TEST_F(CryptoUtilsTest, TestAes256Decrypt) {
   free(file_data_ptr);
 }
 
+TEST_F(CryptoUtilsTest, TestAes256Encrypt) {
+  uint8_t* file_data_ptr;
+  file_data_ptr = CryptoUtils::Aes256Decrypt(file_path.c_str(), &data_out_len);
+  std::string file_str(reinterpret_cast<char*>(file_data_ptr));
+  std::string cmp_str = FmtUtils::ReadText(text_path);
+
+  EXPECT_EQ(data_out_len, 26576);
+  EXPECT_EQ(file_str.substr(0, cmp_str.length()), cmp_str);
+
+  free(file_data_ptr);
+}
+
 TEST_F(CryptoUtilsTest, TestGetSha256Hash) {
   std::string data_in = "foobar";
   std::string digest =
