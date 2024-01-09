@@ -13,6 +13,7 @@
 #define SERVER_PORT 50051
 
 #define MSG " $ "
+#define AES_PADDING_CHAR ' '
 #define JOB_TYPE_PUB "PUB_"
 #define JOB_TYPE_SIG "SIG_"
 #define RPC_FAILURE_MSG "FAILURE"

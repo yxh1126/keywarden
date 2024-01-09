@@ -1,0 +1,16 @@
+./get_public -l 1024 -i 1 -t der -f b | sha256sum
+./get_public -l 1024 -i 2 -t der -f b | sha256sum
+./get_public -l 1024 -i 3 -t der -f b | sha256sum
+./get_public -l 1024 -i 4 -t der -f b | sha256sum
+./get_public -l 1024 -i 5 -t der -f b | sha256sum
+./get_public -l 1024 -i 6 -t der -f b | sha256sum
+./get_public -l 1024 -i 7 -t der -f b | sha256sum
+./get_public -l 1024 -i 8 -t der -f b | sha256sum
+./get_public -l 2048 -i 1 -t der -f b | sha256sum
+./get_public -l 2048 -i 2 -t der -f b | sha256sum
+./get_public -l 2048 -i 3 -t der -f b | sha256sum
+./get_public -l 2048 -i 4 -t der -f b | sha256sum
+./get_public -l 2048 -i 5 -t der -f b | sha256sum
+./get_public -l 2048 -i 6 -t der -f b | sha256sum
+./get_public -l 2048 -i 7 -t der -f b | sha256sum
+./get_public -l 2048 -i 8 -t der -f b | sha256sum

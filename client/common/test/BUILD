@@ -11,6 +11,7 @@ cc_test(
     ],
     data = [
         "//data:hashlist.txt",
+        "//data:hashlist_ex.txt",
     ],
     deps = [
         "//:gtest",

@@ -46,7 +46,7 @@ TEST_F(RpcSignClientTest, TestVerifySignature) {
 
   for (int type = 0; type < SUPRT_PUB_TYPE; type++) {
     for (int set = 0; set < SUPRT_KEY_SET; set++) {
-      for (int id = 1; id < SUPRT_KEY_ID; id++) {
+      for (int id = 0; id < SUPRT_KEY_ID; id++) {
         std::string pub_key_pem =
           client->GetRsaPublicKey(key_set[set], id + 1, pub_type[type]);
         if (pub_key_pem == RPC_FAILURE_MSG) break;
@@ -67,20 +67,26 @@ TEST_F(RpcSignClientTest, TestVerifyPubkeyHash) {
   int key_set[] = {RSA_1024_KEY_SET, RSA_2048_KEY_SET};
   int pub_type = JOB_J5_PUB_DER;
   std::string pub_key_fpt;
-  std::vector<std::string> hash_list;
+  std::vector<std::string> hash_list, hash_list_ex;
   int idx = 0;
 
   EXPECT_TRUE(FmtUtils::ReadText("data/hashlist.txt", &hash_list));
-  EXPECT_EQ(hash_list.size(), 14);
+  EXPECT_TRUE(FmtUtils::ReadText("data/hashlist_ex.txt", &hash_list_ex));
+
+  EXPECT_EQ(hash_list.size(), SUPRT_KEY_SET * SUPRT_KEY_ID);
+  EXPECT_EQ(hash_list_ex.size(), SUPRT_KEY_SET * SUPRT_KEY_ID);
 
   for (int set = 0; set < SUPRT_KEY_SET; set++) {
-    for (int id = 1; id < SUPRT_KEY_ID; id++) {
+    for (int id = 0; id < SUPRT_KEY_ID; id++) {
       std::string pub_key_der =
         client->GetRsaPublicKey(key_set[set], id + 1, pub_type);
       if (pub_key_der == RPC_FAILURE_MSG) break;
 
       pub_key_fpt = CryptoUtils::GetRsaPubKeyHash(pub_key_der, key_set[set]);
       EXPECT_EQ(pub_key_fpt, hash_list[idx]);
+
+      pub_key_fpt = CryptoUtils::GetRsaPubKeyHash(pub_key_der, -1);
+      EXPECT_EQ(pub_key_fpt, hash_list_ex[idx]);
       idx++;
     }
   }
